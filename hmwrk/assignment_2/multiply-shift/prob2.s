@@ -1,0 +1,33 @@
+/*
+	Amul Bham
+	9/28/2015
+	COVERSION OF AREA TO RADIUS SQUARED
+	R1 - AREA
+	R2 - CONVERSION AREA TO RADIUS - AREA * 1/PI
+	R3 - RADIUS SQUARED
+*/
+.global _start
+	_start:
+	
+		MOV R1, #110	@BP 0 wD 7
+		LDR R2, =0x517D5F 	@BP24- WD24
+		MUL R0,R1,R2	@@BP-24  WD31
+		LSR R0, #24	@BP 0 WD 7
+		MOV R7, #1
+		SWI 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
