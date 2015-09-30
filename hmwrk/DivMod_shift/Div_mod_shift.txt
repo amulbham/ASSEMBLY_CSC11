@@ -1,0 +1,28 @@
+/*Amul Bham, 9/30/15,
+Purpose: To use shifted subtraction
+to find the division and the remainder*/
+
+global _start
+_start:
+
+    /*Initialize the Registers*/
+    
+    MOV R0,#0          @result of mod R5%R4	
+    MOV R1,#0          @Result of R5/R4 start with 0
+    MOV R2,#1
+    MOV R3,#6		   @Denominator	
+	MOV R4,#6			@Numerator
+	/*Shift the denominator to the left*/
+    MOV R0,R3          @
+	
+	CMP R0,R2
+	BLT _output        @Exit and output the result
+        ADD R1,R1,#1   @Increment the Division Counter
+        SUB R0,R0,R2   @Subtract the Denominator from the Numerator
+    }
+	BAL _while_R0_GE_R2
+	
+	/*Output the result
+	_output:
+	MOV R7,#1
+	SWI 0
