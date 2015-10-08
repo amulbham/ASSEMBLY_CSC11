@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
     cout<<"The sum is "<<sum<<endl;
     
     
-    /************While Loop*************/
+    /******************While Loop********************/
     //Reset the variables back to starting position  
     i =1;
     sum = 0;
