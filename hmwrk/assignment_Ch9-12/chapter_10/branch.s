@@ -1,3 +1,4 @@
+
 .global _start
 _start:
 
@@ -17,3 +18,4 @@ BAL _loop @ branch always to the start
 _stop:
 MOV R7, #1
 SWI 0
+
