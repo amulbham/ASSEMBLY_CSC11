@@ -1,0 +1,8 @@
+
+.global _start
+
+_start:
+ADD AL, R0,R1,R2 
+ADD 
+MOV R7,#1
+SWI 0
