@@ -29,8 +29,9 @@ main:
  bl scanf /* call to scanf */
  ldr r0, address_of_number_read /* r0 ← &number_read */
  ldr r0, [r0] /* r0 ← *r0 */
- bl mult_by_5
- mov r2, r0 /* r2 ← r0 */
+ bl part2
+ 
+ /*mov r2, r0 /* r2 ← r0 */
  ldr r1, address_of_number_read /* r1 ← &number_read */
  ldr r1, [r1] /* r1 ← *r1 */
  ldr r0, address_of_message2 /* r0 ← &message2 */
