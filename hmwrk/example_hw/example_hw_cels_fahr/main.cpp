@@ -14,12 +14,17 @@
 #include <iostream>
 #include <iomanip>
 #include <stdio.h>
+
+
+
 using namespace std;
 
 //Function Prototypes
 void menu(void);
-void problem1(unsigned int,unsigned int);
-void problem2(unsigned int,unsigned int);
+
+//User Libraries
+#include "cels.h" //conversion to fahr from C
+#include "fahr.h" //conversion from c to f
 
 //Execution Begins Here!
 int main(int argc, char** argv) {
@@ -40,42 +45,10 @@ int main(int argc, char** argv) {
             goto _main;
             _fahr: problem2(R0,R1);
             goto _main;
-    
+   //If user wants to end program, go here 
     _exit:
     //Exit stage right
     return 0;
 }
 
-void problem1(unsigned int R0,unsigned int R1){
-    
-    unsigned int R2 = R0;
-    unsigned int R4 = 0x1CD;
-    
-    printf("Display Degree Centigrade to Degree Fahrenheit\n");
-    printf("Fahrenheit  Centigrade\n");
-    _loop: 
-    R4 = 0x1CD;
-    R4*=R2;
-    R4>>=8;
-    R4+=32;
-    cout<<"  "<<R4<<"         "<<R2<<endl;
-    R2++;
-    if (R2<=R1)  goto _loop;
-    
-}
 
-void problem2(unsigned int R0,unsigned int R1){
-    int R2 = 0;
-    int R3 = R0;
-    int R4 = 0;
-    printf("Display Degree Centigrade to Degree Fahrenheit\n");
-    printf("Centigrade     Fahrenheit  \n");
-    _loop1: 
-    R2 = (R3-32);
-    R4 =0x8E38E;
-    R4*=R2;
-    R4>>=20;
-    cout<<"  "<<R4<<"           "<<R3<<endl;
-    R3++;
-    if (R3<=R1)  goto _loop1;
-}
