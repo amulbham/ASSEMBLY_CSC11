@@ -17,7 +17,6 @@
 using namespace std;
 
 //Function Prototypes
-#include <cels.h>
 void menu(void);
 void problem1(unsigned int,unsigned int);
 void problem2(unsigned int,unsigned int);
