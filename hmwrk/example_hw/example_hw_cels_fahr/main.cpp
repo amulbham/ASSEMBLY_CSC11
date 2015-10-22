@@ -17,6 +17,7 @@
 using namespace std;
 
 //Function Prototypes
+#include <cels.h>
 void menu(void);
 void problem1(unsigned int,unsigned int);
 void problem2(unsigned int,unsigned int);
@@ -49,15 +50,13 @@ int main(int argc, char** argv) {
 void problem1(unsigned int R0,unsigned int R1){
     
     unsigned int R2 = R0;
-    unsigned int R3;
-    unsigned int R4 = 0x1C;
+    unsigned int R4 = 0x1CD;
     
     printf("Display Degree Centigrade to Degree Fahrenheit\n");
     printf("Fahrenheit  Centigrade\n");
     _loop: 
     R4 = 0x1CD;
     R4*=R2;
-    _shift:
     R4>>=8;
     R4+=32;
     cout<<"  "<<R4<<"         "<<R2<<endl;
@@ -67,20 +66,17 @@ void problem1(unsigned int R0,unsigned int R1){
 }
 
 void problem2(unsigned int R0,unsigned int R1){
-    unsigned int R2 = R0;
-    unsigned int R3;
-    unsigned int R4 = 0x25;
-    unsigned int R5 = R0;
+    int R2 = 0;
+    int R3 = R0;
+    int R4 = 0;
     printf("Display Degree Centigrade to Degree Fahrenheit\n");
-    printf("Fahrenheit  Centigrade\n");
-    _loop: 
-    R2 = R5;
-    R4 =0x25;
-    R2-=32;
+    printf("Centigrade     Fahrenheit  \n");
+    _loop1: 
+    R2 = (R3-32);
+    R4 =0x8E38E;
     R4*=R2;
-    _shift:
-    R4>>=8;
-    cout<<"  "<<R4<<"         "<<R2<<endl;
-    R5++;
-    if (R5<=R1)  goto _loop;
+    R4>>=20;
+    cout<<"  "<<R4<<"           "<<R3<<endl;
+    R3++;
+    if (R3<=R1)  goto _loop1;
 }
