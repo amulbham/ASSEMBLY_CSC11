@@ -31,19 +31,22 @@ int main(int argc, char** argv) {
     scanf(hrs);
     
     //Determine pay rate accounting for overtime
+    //hrs and rtePy are passed as parameters to the functions
+    //Each should be a function that the program branches too based on the hours worked.
+    
+    //So first should be cmp to 40, 50 and 60
     unsigned int sTime = (rtePy*hrs); //given first twenty hours are fulfilled
-    //Given first twenty hours, plus next twenty hours are fulfilled
     unsigned int dTime = (rtePy*40)+ ((hrs-40)*(2*rtePy));
     unsigned int tTime = (rtePy*40)+ (2*rtePy * 10) + (hrs-60)*(3*rtePy);
     
     
     //Use an if statement to determine which rate of pay the user falls in
     if (hrs<=40){
-        gPay = sTime;
+        goto sTime;
     }else if(hrs>40 && hrs<=50){
-        gPay = dTime;
+        goto dTime;
     }else{
-        gPay = tTime;
+        goto tTime;
     }
    //Output the gross pay of the user
     cout<<fixed<<showpoint<<setprecision(2);
