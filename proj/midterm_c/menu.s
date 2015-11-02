@@ -29,7 +29,20 @@ link: .word 0
 .text
 .global main
 
+one:
+bl prob1
+BAL _menu 
+
+two:
+bl prob2
+BAL _menu
+
+three:
+bl prob3
+BAL _menu
 main:
+
+
 _menu:
 ldr r1, address_of_link
 str lr, [r1]
@@ -52,25 +65,18 @@ bl printf
 ldr R0, address_of_format
 ldr R1, address_of_option
 bl scanf 
+ldr R2, address_of_option
+ldr R2,[R2]
 
-
-cmp R1, #1
+cmp R2, #1
 BEQ one
-one:
-bl prob1
-BAL _menu
-
-cmp R1, #2
+cmp R2, #2
 BEQ two
-two:
-bl prob2
-BAL _menu
-
-cmp R1, #3
+cmp R2, #3
 BEQ three
-three:
-bl prob3
-BAL _menu
+cmp R2, #4
+BEQ _exit
+_exit:
 
 ldr r1, address_of_link
 ldr lr, [r1]

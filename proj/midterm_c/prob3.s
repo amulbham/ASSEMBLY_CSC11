@@ -55,8 +55,6 @@ MOV R3,R0
 SUB R1, R1, R4
 cmp R1,#2
 MOV R1, R0
-ldr R0, address_of_output
-bl printf
 BGT _loop
 
 MOV R1, R0
