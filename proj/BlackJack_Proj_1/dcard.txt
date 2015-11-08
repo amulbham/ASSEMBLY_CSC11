@@ -1,9 +1,9 @@
 .data
 .balign 4
-message: .asciz "Your card total is %d\n\n\n"
+message: .asciz "My card total is %d\n\n\n"
 
 .balign 4
-return3: .word 0
+return4: .word 0
 
 .balign 4
 current: .asciz "%d"
@@ -34,13 +34,12 @@ card_t: .word 0
  
 .text
 
-.global _getcard
-_getcard:
+.global _dcard
+_dcard:
     push {lr} 
 
 	mov r4,r0                   /* Setup loop counter */
 	mov r5, #0
-	
 	mov r0,#0                    /* Set time(0) */
     bl time                      /* Call time */
 	bl srand                     /* Call srand */
@@ -161,7 +160,7 @@ _getcard:
 	bx lr 
  
 address_of_message: .word message
-address_of_return3: .word return3
+address_of_return4: .word return4
 cardt: .word card_t
 current_card: .word current
 output_hearts: .word hearts

@@ -21,10 +21,13 @@ continue: .asciz "%d"
 .balign
 firstcards: .asciz "Now dealing your first two cards...\n"
 
+.balign
+dfcards: .asciz "Now dealing my first card...\n"
+
 .balign 4
 continueA: .word 0
 
-/*Card values*/
+/*Card values - dealer card total and player card total*/
 .balign 4
 card1: .word 0
 
@@ -33,6 +36,9 @@ card2: .word 0
 
 .balign 4
 total: .word 0
+
+.balign 4
+total2: .word 0
 
 .text
 
@@ -60,19 +66,22 @@ cmp R2, #2
 BGE _gloop
 bl _greeting
 
-
-
 _gloop:
 ldr R0, address_of_firstcards
 bl printf
 
 mov R0, #2 
-ldr r1, card_total
+ldr r1, pcard_total
 ldr r1, [r1]
 bl _getcard
 
+ldr R0, address_of_dfirstcards
+bl printf
 
-
+mov R0, #1 
+ldr r1, dcard_total
+ldr r1, [r1]
+bl _dcard
 
 
 ldr lr, address_of_return 
@@ -85,9 +94,12 @@ address_of_opening2: .word opening2
 address_of_continue: .word continue
 address_of_continueA: .word continueA
 address_of_firstcards: .word firstcards
+address_of_dfirstcards: .word dfcards
 card_1: .word card1
 card_2: .word card2
-card_total: .word total
+pcard_total: .word total
+dcard_total: .word total2
+
 
 /* External */
 .global printf
