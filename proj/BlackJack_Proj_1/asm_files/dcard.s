@@ -1,7 +1,9 @@
 .data
+.balign 4
+message: .asciz "My card total is %d\n\n\n"
 
 .balign 4
-return3: .word 0
+return4: .word 0
 
 .balign 4
 current: .asciz "%d"
@@ -32,18 +34,17 @@ card_t: .word 0
  
 .text
 
-.global _getcard
-_getcard:
+.global _dcard
+_dcard:
     push {lr} 
 
 	mov r4,r0                   /* Setup loop counter */
-	mov r5, r1
-	
+	mov r5, #0
 	mov r0,#0                    /* Set time(0) */
     bl time                      /* Call time */
 	bl srand                     /* Call srand */
 	
-    loop_rand:                      
+    loop_rand:                
 	bl rand                      /* Call rand */
 	mov R1,r0,ASR #1             /* In case random return is negative */
 	mov r2,#52                  /* Move 90 to r2 */
@@ -114,10 +115,14 @@ _getcard:
 	
 	_addtotal:
 	/*Add the running total of the cards to the card total*/
-	add R5, R5,r1
+	mov R5, r1
 	mov R6, R3
+	
+	cmp r4, #1
+	bgt _skip
 	bl printf
 	
+	_skip:
 	cmp R6, #1
 	BEQ _h
 	cmp R6, #2
@@ -128,18 +133,26 @@ _getcard:
 	b _s
 	
 	_h:
+	cmp r4, #1
+	bgt _loop
 	ldr r0, output_hearts
 	bl printf
 	b _loop
 	_d:
+	cmp r4, #1
+	bgt _loop
 	ldr r0, output_diamonds
 	bl printf
 	b _loop
 	_c:
+	cmp r4, #1
+	bgt _loop
 	ldr r0, output_cloves
 	bl printf
 	b _loop
 	_s:
+	cmp r4, #1
+	bgt _loop
 	ldr r0, output_spades
 	bl printf
 	b _loop
@@ -150,12 +163,13 @@ _getcard:
 	bgt loop_rand
 	
 	mov r1, R5
-
-
-    pop {lr}  
+	
+	
+    pop {lr} 
 	bx lr 
  
-address_of_return3: .word return3
+address_of_message: .word message
+address_of_return4: .word return4
 cardt: .word card_t
 current_card: .word current
 output_hearts: .word hearts
