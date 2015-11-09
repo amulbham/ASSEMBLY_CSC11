@@ -1,6 +1,4 @@
 .data
-.balign 4
-message: .asciz "Your card total is %d\n\n\n"
 
 .balign 4
 return3: .word 0
@@ -39,13 +37,13 @@ _getcard:
     push {lr} 
 
 	mov r4,r0                   /* Setup loop counter */
-	mov r5, #0
+	mov r5, r1
 	
 	mov r0,#0                    /* Set time(0) */
     bl time                      /* Call time */
 	bl srand                     /* Call srand */
 	
-  loop_rand:                     /* Create a 2 digit random number */
+    loop_rand:                      
 	bl rand                      /* Call rand */
 	mov R1,r0,ASR #1             /* In case random return is negative */
 	mov r2,#52                  /* Move 90 to r2 */
@@ -98,7 +96,7 @@ _getcard:
 	b _continue
 	
 	_sub4:
-	sub R1,#4
+	sub R1,#3
 	ldr R0, output_ace
 	b _addtotal
 	_sub3:
@@ -152,15 +150,11 @@ _getcard:
 	bgt loop_rand
 	
 	mov r1, R5
-	
-	ldr r0, address_of_message   /* Set &message2 as the first parameter of printf */
-    bl printf
-	
-	mov r1, r5
-    pop {lr} 
+
+
+    pop {lr}  
 	bx lr 
  
-address_of_message: .word message
 address_of_return3: .word return3
 cardt: .word card_t
 current_card: .word current

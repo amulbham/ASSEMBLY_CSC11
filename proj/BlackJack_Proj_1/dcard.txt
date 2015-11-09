@@ -17,6 +17,8 @@ cloves: .asciz " of cloves\n"
 .balign 4
 spades: .asciz " of spades\n"
 
+
+
 .balign 4
 jack: .asciz "Jack"
 
@@ -44,7 +46,7 @@ _dcard:
     bl time                      /* Call time */
 	bl srand                     /* Call srand */
 	
-  loop_rand:                     /* Create a 2 digit random number */
+    loop_rand:                
 	bl rand                      /* Call rand */
 	mov R1,r0,ASR #1             /* In case random return is negative */
 	mov r2,#52                  /* Move 90 to r2 */
@@ -97,7 +99,7 @@ _dcard:
 	b _continue
 	
 	_sub4:
-	sub R1,#4
+	sub R1,#3
 	ldr R0, output_ace
 	b _addtotal
 	_sub3:
@@ -115,10 +117,14 @@ _dcard:
 	
 	_addtotal:
 	/*Add the running total of the cards to the card total*/
-	add R5, R5,r1
+	mov R5, r1
 	mov R6, R3
+	
+	cmp r4, #1
+	bgt _skip
 	bl printf
 	
+	_skip:
 	cmp R6, #1
 	BEQ _h
 	cmp R6, #2
@@ -129,18 +135,26 @@ _dcard:
 	b _s
 	
 	_h:
+	cmp r4, #1
+	bgt _loop
 	ldr r0, output_hearts
 	bl printf
 	b _loop
 	_d:
+	cmp r4, #1
+	bgt _loop
 	ldr r0, output_diamonds
 	bl printf
 	b _loop
 	_c:
+	cmp r4, #1
+	bgt _loop
 	ldr r0, output_cloves
 	bl printf
 	b _loop
 	_s:
+	cmp r4, #1
+	bgt _loop
 	ldr r0, output_spades
 	bl printf
 	b _loop
@@ -152,10 +166,7 @@ _dcard:
 	
 	mov r1, R5
 	
-	ldr r0, address_of_message   /* Set &message2 as the first parameter of printf */
-    bl printf
 	
-	mov r1, r5
     pop {lr} 
 	bx lr 
  
