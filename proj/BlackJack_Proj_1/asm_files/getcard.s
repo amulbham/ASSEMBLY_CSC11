@@ -1,11 +1,10 @@
+/*Function used to generate a random card value, assign that card value a suit, and then add the 
+card value to the players running card total*/
 .data
 
 .balign 4
-return3: .word 0
-
-.balign 4
 current: .asciz "%d"
-
+/*Output for each face value and suit value*/
 .balign 4
 hearts: .asciz " of hearts\n"
 .balign 4
@@ -27,16 +26,15 @@ king: .asciz "King"
 .balign 4
 ace: .asciz "Ace"
 
-.balign 4
-card_t: .word 0
- 
+
 .text
 
 .global _getcard
 _getcard:
+	/*push the lr to the top of the stack*/
     push {lr} 
-
-	mov r4,r0                   /* Setup loop counter */
+	/*Setup a loop counter in r4, keep a running card total in r5*/
+	mov r4,r0                   
 	mov r5, r1
 	
 	mov r0,#0                    /* Set time(0) */
@@ -46,11 +44,13 @@ _getcard:
     loop_rand:                      
 	bl rand                      /* Call rand */
 	mov R1,r0,ASR #1             /* In case random return is negative */
-	mov r2,#52                  /* Move 90 to r2 */
-		                         /* We want rand()%90+10 so cal divMod with rand()%90 */
+	mov r2,#52                  
+		                         
 	bl divMod                    /* Call divMod function to get remainder */
-	add R1,#2					/* Remainder in r1 so add 10 giving between 10 and 99 -> 2 digits */
+	/*Add two to the random number as a deck of cards starts at 2*/
+	add R1,#2					
 	
+	/*Based on the value 2-53, the card is assigned a suit*/
 	cmp R1, #14
 	BLE _hearts
 	
@@ -61,11 +61,13 @@ _getcard:
 	BLE _cloves
 	
 	BGT _spades
-	
+	/*Hold the suit in r3, subtract accordingly so the card value falls between 2-14*/
 	_hearts:
 	mov r3, #1
 	b _continue
 	
+	/*After the suit is determined, a value must be applied if the card is a face card,
+	else the value of the card is the number representation*/
 	_continue:
 	cmp R1,#14
 	BEQ _sub4
@@ -94,7 +96,7 @@ _getcard:
 	mov r3, #4
 	sub R1,#39
 	b _continue
-	
+	/*If the card is a face, a number must be subtracted off so it equils 10 or 11 if its an ace*/
 	_sub4:
 	sub R1,#3
 	ldr R0, output_ace
@@ -112,12 +114,13 @@ _getcard:
 	ldr R0, output_jack
 	b _addtotal
 	
+	/*Once the suit and face value cards are dealt with, the running card total is determined*/
 	_addtotal:
 	/*Add the running total of the cards to the card total*/
 	add R5, R5,r1
 	mov R6, R3
 	bl printf
-	
+	/*Then the output is given to the user*/
 	cmp R6, #1
 	BEQ _h
 	cmp R6, #2
@@ -126,7 +129,7 @@ _getcard:
 	BEQ _c
 
 	b _s
-	
+	/*First the card, followed by the suit is outputted*/
 	_h:
 	ldr r0, output_hearts
 	bl printf
@@ -143,20 +146,20 @@ _getcard:
 	ldr r0, output_spades
 	bl printf
 	b _loop
-	
+	/*Loop until the proper amount of cards are drawn for a given turn*/
 	_loop:
 	sub r4,#1
 	cmp r4,#0
 	bgt loop_rand
-	
+	/*store the running total back into r1 for main*/
 	mov r1, R5
 
+	/*pop back the lr to go back to the main function*/
 
     pop {lr}  
 	bx lr 
- 
-address_of_return3: .word return3
-cardt: .word card_t
+	
+ /*Addresses for each suit and face value card*/
 current_card: .word current
 output_hearts: .word hearts
 output_diamonds: .word diamonds
