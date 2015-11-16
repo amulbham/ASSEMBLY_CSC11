@@ -20,37 +20,36 @@ fib: .word 0
 
 /*Address for output*/
 .balign 4
-output: .asciz "%d"
+output: .asciz "%d\n"
 
 .text
+.global main
+
 
 recursion:
-push {r4,lr}
-mov r5, #0
-mov r6, #1
-
-cmp r0, #0
-beq _stop
-
-add r1,r1, r5
-add r1, r1, r6
-mov r5, r6
-mov r6, r1
-sub 
-bl recursion
-
-
-_stop:
-pop {r4,lr}
+push {r2,lr}
+cmp r0, #2
+bgt _one
+mov r1,#1
+b _stop
 
 
 _one:
-add r1, r1, #1
+
 sub r0,r0, #1
 bl recursion
+mov r2, r1 
+sub r0,r0,#1
+bl recursion
+add r1, r1, r2 
+add r0, r0, #2
 
 
-.global main
+_stop:
+pop {r2,lr}
+bx lr
+
+
 
 main:
 
@@ -75,6 +74,7 @@ ldr R0, address_of_output
 bl printf
 
 pop {r4,lr}
+bx lr
 
 address_of_message1: .word message1
 format_of_answer: .word format 
