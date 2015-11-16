@@ -12,7 +12,7 @@ sequence: .word 0
 
 /*Set the format of the scan f and printf*/
 .balign 4
-format: .asciz "%d\n"
+format: .asciz "%d"
 
 /*address of the fib number*/
 .balign 4
@@ -23,35 +23,33 @@ fib: .word 0
 output: .asciz "%d\n"
 
 .text
+.global main
+
 
 recursion:
-push {r0,lr}
-mov r4, r0 
-
-cmp r4, #0
-beq _stop
-cmp r4, #1 
-beq _one
-mov r2, #2
-_go:
-sub r0, r0, #1
-add r1,r1, r0
-bl recursion
-sub r2, r2, #1
-cmp r2, #0
-bne _go
-
-_stop:
-pop {r0,lr}
+push {r2,lr}
+cmp r0, #2
+bgt _one
+mov r1,#1
+b _stop
 
 
 _one:
-add r1, r1, #1
+
 sub r0,r0, #1
 bl recursion
+mov r2, r1 
+sub r0,r0,#1
+bl recursion
+add r1, r1, r2 
+add r0, r0, #2
 
 
-.global main
+_stop:
+pop {r2,lr}
+bx lr
+
+
 
 main:
 
@@ -76,6 +74,7 @@ ldr R0, address_of_output
 bl printf
 
 pop {r4,lr}
+bx lr
 
 address_of_message1: .word message1
 format_of_answer: .word format 
