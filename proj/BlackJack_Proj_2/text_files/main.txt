@@ -58,9 +58,13 @@ total: .word 0
 .balign 4
 total2: .word 0
 
+.balign 4
+deck: .word 208
+
 .text
 
 .global main
+
 
 main:
 /*store the link register*/

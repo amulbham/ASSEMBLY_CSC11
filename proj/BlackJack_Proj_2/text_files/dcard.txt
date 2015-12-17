@@ -3,9 +3,6 @@
 message: .asciz "My card total is %d\n\n\n"
 
 .balign 4
-return4: .word 0
-
-.balign 4
 current: .asciz "%d"
 
 .balign 4
@@ -38,7 +35,7 @@ card_t: .word 0
 
 .global _dcard
 _dcard:
-    push {lr} 
+    push {r4,r5,r6,lr} 
 
 	mov r4,r0                   /* Setup loop counter */
 	mov r5, #0
@@ -167,11 +164,10 @@ _dcard:
 	mov r1, R5
 	
 	
-    pop {lr} 
+    pop {r4,r5,r6,lr} 
 	bx lr 
  
 address_of_message: .word message
-address_of_return4: .word return4
 cardt: .word card_t
 current_card: .word current
 output_hearts: .word hearts
