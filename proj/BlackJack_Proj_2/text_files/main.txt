@@ -103,11 +103,14 @@ _start:
 ldr R0, address_of_firstcards
 bl printf
 
-
-mov R0, #2 
+mov r1,#0
+mov r7,#0
+_phand:
+add r7, r7,#1
 ldr r1, pcard_total
 ldr r1, [r1]
-
+cmp r7, #2
+blt _phand
 bl _getcard
 
 mov r8,r1

@@ -34,11 +34,10 @@ ace: .asciz "Ace"
 
 _getcard:
 	/*push the lr and any local variable to the stack*/
-    push {r4,r5,r6,lr} 
+    push {r4,r5,r6,r7,r8,lr} 
 	
 	/*Setup a loop counter in r4, keep a running card total in r5*/
-	mov r4,r0                   
-	mov r5, r1
+	mov r4, r1
 	
 	mov r0,#0                    /* Set time(0) */
     bl time                      /* Call time */
@@ -120,7 +119,7 @@ _getcard:
 	/*Once the suit and face value cards are dealt with, the running card total is determined*/
 	_addtotal:
 	/*Add the running total of the cards to the card total*/
-	add R5, R5,r1
+	add R4, R4,r1
 	mov R6, R3
 	bl printf
 	/*Then the output is given to the user*/
@@ -149,17 +148,14 @@ _getcard:
 	ldr r0, output_spades
 	bl printf
 	b _loop
-	/*Loop until the proper amount of cards are drawn for a given turn*/
+	
 	_loop:
-	sub r4,#1
-	cmp r4,#0
-	bgt loop_rand
 	/*store the running total back into r1 for main*/
-	mov r1, R5
+	mov r1, r4
 
 	/*pop back the lr to go back to the main function*/
 
-    pop {r4,r5,r6,lr}  
+    pop {r4,r5,r6,r7,r8,lr}  
 	bx lr 
 	
  /*Addresses for each suit and face value card*/
