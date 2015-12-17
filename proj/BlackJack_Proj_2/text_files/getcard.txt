@@ -1,4 +1,5 @@
-/*Function used to generate a random card value, assign that card value a suit, and then add the 
+/*Function used to generate a random card value, 
+assign that card value a suit, and then add the 
 card value to the players running card total*/
 .data
 
@@ -30,9 +31,11 @@ ace: .asciz "Ace"
 .text
 
 .global _getcard
+
 _getcard:
-	/*push the lr to the top of the stack*/
-    push {lr} 
+	/*push the lr and any local variable to the stack*/
+    push {r4,r5,r6,lr} 
+	
 	/*Setup a loop counter in r4, keep a running card total in r5*/
 	mov r4,r0                   
 	mov r5, r1
@@ -156,7 +159,7 @@ _getcard:
 
 	/*pop back the lr to go back to the main function*/
 
-    pop {lr}  
+    pop {r4,r5,r6,lr}  
 	bx lr 
 	
  /*Addresses for each suit and face value card*/

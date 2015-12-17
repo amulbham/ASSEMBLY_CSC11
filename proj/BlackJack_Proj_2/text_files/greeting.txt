@@ -1,9 +1,10 @@
 
-/*Greeting function - displays the rules to the user if they are not familiar*/
+/*Greeting function - displays the rules to the user if they are not familiar
+->Allowed the rules of the game to remain separate from the main logic
+of the game.
+->Only needed to display rules, no input or other action required thus 
+making the function relatively simple and straight forward*/
 .data
-.balign 4
-return2: .word 0
-
 .balign 4
 message1: .asciz "Basically the point of the game is to get to 21\nor as close as possible without going over\n"
 
@@ -21,8 +22,7 @@ message4: .asciz "Also, note that my job as a dealer is to always hit if my card
 
 _greeting:
 /*Output the rules to the user*/
-ldr r1, address_of_return2 
-str lr, [r1]
+push {r4,lr}
 
 ldr R0, address_of_message1
 bl printf
@@ -35,12 +35,11 @@ bl printf
 
 ldr R0, address_of_message4
 bl printf
+
 /*Link back to the main function*/
-ldr lr, address_of_return2
-ldr lr, [lr] 
+pop {r4,lr}
 bx lr 
 
-address_of_return2: .word return2
 address_of_message1: .word message1
 address_of_message2: .word message2
 address_of_message3: .word message3
