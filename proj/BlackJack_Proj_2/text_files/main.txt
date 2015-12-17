@@ -1,7 +1,9 @@
 /*Name: Amul Bham
 Purpose: Develope BlackJack game in assembly language
-Date: 11/5/2015
-Main function of Blackjack Project*/
+and throughly implement core concepts learned throughout
+the semester 
+Date: 12/16/2015
+Main function of Blackjack game*/
 
 .data
 /*address of return for link */
@@ -76,8 +78,7 @@ total2: .word 0
 
 main:
 /*store the link register*/
-ldr r1, address_of_return 
-str lr, [r1]
+push{r4,lr}
 
 /*Output the greeting, and rules if the user does not know how to play*/
 ldr R0,address_of_opening
@@ -242,8 +243,8 @@ b _exit
 
 
 _exit:
-ldr lr, address_of_return 
-ldr lr, [lr] 
+/*Pop back the lr and exit the program*/
+pop {r4,lr} 
 bx lr
 
 
@@ -275,6 +276,7 @@ address_of_playagain: .word playagain
 
 /*External Functions*/
 .global printf
+.global scanf
 .global time
 .global srand
 .global rand
