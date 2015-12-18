@@ -33,7 +33,7 @@ ace: .asciz "Ace"
 
 _getcard:
 	/*push the lr and any local variable to the stack*/
-    push {r3,r4,r5,r6,lr} 
+    push {r3,r4,r5,r6,r7,lr} 
 	
 	mov r4,#0
 	/*Based on the value 2-53, the card is assigned a suit*/
@@ -63,10 +63,10 @@ _getcard:
 	BEQ _sub2
 	cmp R1,#11
 	BEQ _sub1
-	
-	ldr R0, current_card
+		
+	ldr r0, current_card
 	b _addtotal
-	
+
 	_diamonds:
 	mov r3, #2
 	sub R1,#13
@@ -139,7 +139,7 @@ _getcard:
 
 	/*pop back the lr to go back to the main function*/
 
-    pop {r3,r4,r5,r6,lr}  
+    pop {r3,r4,r5,r6,r7,lr}  
 	bx lr 
 	
  /*Addresses for each suit and face value card*/
