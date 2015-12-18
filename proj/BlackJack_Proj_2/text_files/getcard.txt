@@ -33,7 +33,7 @@ ace: .asciz "Ace"
 
 _getcard:
 	/*push the lr and any local variable to the stack*/
-    push {r4,r5,r6,r7,r8,lr} 
+    push {r4,r5,r6,lr} 
 	
 	mov r4,r0
 	/*Based on the value 2-53, the card is assigned a suit*/
@@ -140,7 +140,7 @@ _getcard:
 
 	/*pop back the lr to go back to the main function*/
 
-    pop {r4,r5,r6,r7,r8,lr}  
+    pop {r4,r5,r6,lr}  
 	bx lr 
 	
  /*Addresses for each suit and face value card*/
@@ -155,7 +155,10 @@ output_king: .word king
 output_ace: .word ace
 
 /*External Functions*/
+
+/*External Functions*/
 .global printf
+.global scanf
 .global time
 .global srand
 .global rand

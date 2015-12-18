@@ -5,13 +5,15 @@ Purpose: Develope BlackJack game in ARM assembly language
 Date: 	 12/16/2015
 Main function of Blackjack game*/
 
-.data
+
 /*Below are all the text I had to output to the user 
 or the format of input for user inputed text
 Includes all the messages displayed for the greeting, 
 format of input for hit or miss, and general messages 
 to the player to keep them moving along the game*/
 
+
+.data
 .balign 4
 opening: .asciz "Welcome to ARM BlackJack!\n"
 .balign 4
@@ -58,43 +60,9 @@ total: .word 0
 .balign 4
 total2: .word 0
 
-.balign 4
-arr: .skip 232
-
-
 .text
-.global main
 
-_mkdeck:	
-	/*push the lr and any local variable to the stack*/
-    push {r1,r2,r3,r4,r5,lr} 
-	
-	mov r5, #0
-	ldr r3,[r0]
-	
-	/*Setup a loop counter in r4, keep a running card total in r5*/
-	
-	mov r0,#0                    /* Set time(0) */
-    bl time                      /* Call time */
-	bl srand                     /* Call srand */
-	
-	_nCard:
-	add r5, r5, #1
-	bl rand                      /* Call rand */
-	mov R1,r0,ASR #1             /* In case random return is negative */
-	mov r2,#52                  
-		                         
-	bl divMod                    /* Call divMod function to get remainder */
-	/*Add two to the random number as a deck of cards starts at 2*/
-	add R1,#2	
-	
-	str r1,[r3,+r5,LSL #2]
-	
-	cmp r5, #52
-	blt _nCard
-	
-    pop {r1,r2,r3,r4,r5,lr}  
-	bx lr
+.global main
 
 main:
 /*store the link register*/
@@ -115,15 +83,9 @@ ldr r6, address_of_continueA
 ldr r6, [r6]
 
 cmp r6, #2
-BGE _gloop
+BGE _start
 bl _greeting
 
-_gloop:
-/*Variables to track the players running card totals, reset after each hand*/
-ldr r8, card_1
-ldr r8,[r8]
-ldr r9, card_2
-ldr r9,[r9]
 
 _start:	
 /*Output the players first two cards*/
@@ -131,10 +93,32 @@ ldr R0, address_of_firstcards
 bl printf
 
 
+mov r8, sp
 
-mov r2,#0
-ldr r0, arr_cards
-bl _mkdeck
+
+	mov r5, #0
+	mov r4, #0
+	/*Setup a loop counter in r4, keep a running card total in r5*/
+	
+	mov r0,#0                    /* Set time(0) */
+    bl time                      /* Call time */
+	bl srand                     /* Call srand */
+	
+	sub sp, sp, #208
+	_nCard:
+	bl rand                      /* Call rand */
+	mov R1,r0,ASR #1             /* In case random return is negative */
+	mov r2,#52                  
+		                         
+	bl divMod                    /* Call divMod function to get remainder */
+	/*Add two to the random number as a deck of cards starts at 2*/
+	add R1,r1,#2	
+	str r1,[sp,+r5,LSL #2]
+	add r5, r5, #1
+	cmp r5, #52
+	blt _nCard	
+
+mov sp, r8
 
 mov r6, #0
 mov r7,#0
@@ -279,7 +263,7 @@ ldr R4, [R4]
 
 cmp r4, #1
 /*Branch to the start of the game loop if yes, else exit the program*/
-beq _gloop
+beq _start
 b _exit
 
 
@@ -311,7 +295,6 @@ address_of_win: .word win
 address_of_tie: .word tie
 address_of_plose21: .word lose21
 address_of_playagain: .word playagain
-arr_cards: .word arr
 
 
 /*External Functions*/
