@@ -69,7 +69,7 @@ total2: .word 0
 .globl main
 
 main:
-/*store the link register*/
+/*store the link register, allocate 208 bits of memory for the 52 cards in a deck (52 * 4 bytes)*/
 push {r6,lr}
 mov r6, sp
 sub sp, sp, #208
