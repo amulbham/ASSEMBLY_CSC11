@@ -33,9 +33,9 @@ ace: .asciz "Ace"
 
 _getcard:
 	/*push the lr and any local variable to the stack*/
-    push {r4,r5,r6,r7,r8,lr} 
+    push {r3,r4,r5,r6,r7,lr} 
 	
-	mov r4,r0
+	mov r4,#0
 	/*Based on the value 2-53, the card is assigned a suit*/
 	cmp R1, #14
 	BLE _hearts
@@ -63,10 +63,10 @@ _getcard:
 	BEQ _sub2
 	cmp R1,#11
 	BEQ _sub1
-	
-	ldr R0, current_card
+		
+	ldr r0, current_card
 	b _addtotal
-	
+
 	_diamonds:
 	mov r3, #2
 	sub R1,#13
@@ -103,7 +103,7 @@ _getcard:
 	/*Once the suit and face value cards are dealt with, the running card total is determined*/
 	_addtotal:
 	/*Add the running total of the cards to the card total*/
-	add R4, R4,r1
+	add r4, r4,r1
 	mov R6, R3
 	bl printf
 	/*Then the output is given to the user*/
@@ -135,12 +135,11 @@ _getcard:
 	
 	_loop:
 	/*store the running total back into r1 for main*/
-	add r4, r4, r1
-	mov r0,r4
+	mov r0, r4
 
 	/*pop back the lr to go back to the main function*/
 
-    pop {r4,r5,r6,r7,r8,lr}  
+    pop {r3,r4,r5,r6,r7,lr}  
 	bx lr 
 	
  /*Addresses for each suit and face value card*/
@@ -155,7 +154,10 @@ output_king: .word king
 output_ace: .word ace
 
 /*External Functions*/
+
+/*External Functions*/
 .global printf
+.global scanf
 .global time
 .global srand
 .global rand

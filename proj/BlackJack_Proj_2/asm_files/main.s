@@ -5,13 +5,15 @@ Purpose: Develope BlackJack game in ARM assembly language
 Date: 	 12/16/2015
 Main function of Blackjack game*/
 
-.data
+
 /*Below are all the text I had to output to the user 
 or the format of input for user inputed text
 Includes all the messages displayed for the greeting, 
 format of input for hit or miss, and general messages 
 to the player to keep them moving along the game*/
 
+
+.data
 .balign 4
 opening: .asciz "Welcome to ARM BlackJack!\n"
 .balign 4
@@ -25,7 +27,7 @@ dfcards: .asciz "Now dealing my first card...\n"
 .balign 4
 hit: .asciz "Would you like to hit(1) or stay (2)\n"
 .balign 4
-message: .asciz "card total: %d\n\n\n"
+message: .asciz "card total: %d\n\n"
 .balign 4
 finish: .asciz "And now the rest of my hand...\n"
 .balign 4
@@ -58,19 +60,15 @@ total: .word 0
 .balign 4
 total2: .word 0
 
-.balign 4
-arr: .skip 232
-
-
 .text
 
-.global main
-
+.globl main
 
 main:
 /*store the link register*/
-push {lr}
-
+push {r6,lr}
+mov r6, sp
+sub sp, sp, #208
 /*Output the greeting, and rules if the user does not know how to play*/
 ldr R0,address_of_opening
 bl printf
@@ -82,17 +80,12 @@ ldr R0, address_of_continue
 ldr R1, address_of_continueA
 bl scanf
 
-ldr r6, address_of_continueA
-ldr r6, [r6]
+ldr r7, address_of_continueA
+ldr r7, [r7]
 
-cmp r6, #2
-BGE _gloop
+cmp r7, #2
+BGE _start
 bl _greeting
-
-_gloop:
-/*Variables to track the players running card totals, reset after each hand*/
-ldr r8, card_1
-ldr r9, card_2
 
 
 _start:	
@@ -100,43 +93,68 @@ _start:
 ldr R0, address_of_firstcards
 bl printf
 
-ldr r3, arr_cards
-bl _mkdeck
 
-mov r6, #1
+	
+	
+	/*Setup a loop counter in r4, keep a running card total in r5*/
+	mov r4, #0
+	mov r5, #0
+	mov r0,#0                    /* Set time(0) */
+    bl time                      /* Call time */
+	bl srand                     /* Call srand */
+	
+	_nCard:
+	bl rand                      /* Call rand */
+	mov R1,r0,ASR #1             /* In case random return is negative */
+	mov r2,#52                  
+		                         
+	bl divMod                    /* Call divMod function to get remainder */
+	/*Add two to the random number as a deck of cards starts at 2*/
+	add R1,#2
+    add r4,#1
+	cmp r4,#20
+	blt _nCard
+	mov r4, #0
+	str r1,[r6,-r5,LSL #2]
+	add r5, #1
+	cmp r5, #52
+	blt _nCard	
+	
+
+
+mov r5, #45
+mov r8, #0
 mov r7,#0
-ldr r1, card_1
-ldr r0, pcard_total
 _phand:
-add r10,r3,r6,lsl #2
-str r10, [r1] 
-add r6, r6, #1
-add r7, r7,#1
+ldr r1,[r6,-r5,lsl #2]
 bl _getcard
+sub r5, #1
+add r7, r7,#1
 cmp r7, #2
+add r8,r8,r0
 blt _phand
 
-str r0, [r8]
-mov r1, r0
+
+mov r1,r8
 ldr r0, address_of_message 
 bl printf
 
 /*If the user has hit a 21 on the first 2 cards, skip the hit or stay portion and finish dealers hand*/
-cmp r8, #21
+cmp r1, #21
 BEQ _dealerhand
+
 
 /*Output the dealers first card*/
 ldr R0, address_of_dfirstcards
 bl printf
-add r6,r6,#1
-add r9,r3,r6,lsl #2
-str r9, [r1] 
-ldr r1,[r1]
-ldr r0, dcard_total
-ldr r0, [r0]
+
+mov r9, #0
+sub r5,#1
+ldr r1,[r6,-r5,lsl #2]
 bl _getcard
-mov r9, r0
-mov r1, r0
+add r9, r9, r0
+
+mov r1, r9
 ldr r0, address_of_message 
 bl printf
 
@@ -152,20 +170,16 @@ bl scanf
 
 ldr R7, address_of_hitorstay
 ldr R7, [R7]
-ldr r0, pcard_total
-ldr r0, [r0]
 /*If the user decides to stay, finish the rest of the dealer hand*/
 cmp R7, #1
 BGT _dealerhand
-add r6,r6,#1
-add r8,r3,r6,lsl #2
-str r8, [r1]
-ldr r1,[r1]
+sub r5,#1
+ldr r1,[r6,-r5,lsl #2]
 bl _getcard
-/*Output the card total, store the card total in r8*/
+add r8,r8,r0
 
-mov r8,r0
-mov r1,r0
+/*Output the card total, store the card total in r8*/
+mov r1, r8
 ldr r0, address_of_message   
 bl printf
 
@@ -180,22 +194,21 @@ _dealerhand:
 
 ldr r0,address_of_finish
 bl printf
-ldr R0, dcard_total 
-ldr r0, [r0]
+
 _newcard:
-add r6,r6,#1
-add r9,r3,r6,lsl #2
-str r9, [r1]
-ldr r1, [r1]
+sub r5, #1 
+ldr r1,[r6,-r5,lsl #2]
 bl _getcard
-mov r9,r0
-mov r1,r0
-ldr r0, address_of_message   
+add r9, r9, r0
+
+mov r1, r9
+ldr r0, address_of_message 
 bl printf
 cmp r9, #17
 /*If card total is less than 17, loop back for another card*/
 bge _end
 blt _newcard
+
 
 /*Output the results of the game to the user*/
 _end:
@@ -244,14 +257,14 @@ ldr R4, [R4]
 
 cmp r4, #1
 /*Branch to the start of the game loop if yes, else exit the program*/
-beq _gloop
+beq _start
 b _exit
 
-
 _exit:
-/*Pop back the lr and exit the program*/
-
-pop {lr} 
+/*Pop back the lr and exit the program, restore the orginal value of the stack
+by placing the value stored in r6 back into the sp register*/
+mov sp, r6
+pop {r6,lr} 
 bx lr
 
 
@@ -276,7 +289,6 @@ address_of_win: .word win
 address_of_tie: .word tie
 address_of_plose21: .word lose21
 address_of_playagain: .word playagain
-arr_cards: .word arr
 
 
 /*External Functions*/

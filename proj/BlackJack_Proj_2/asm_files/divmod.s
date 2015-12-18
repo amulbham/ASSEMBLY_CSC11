@@ -1,15 +1,10 @@
-/* 
-	Functions
-		scaleRight
-		addSub
-		scaleLeft
-		divMod
-*/
+
+.data
 
 .text
 
 /*void scaleRight(int &r1,int &r3,int &r2) */
-.globl scaleRight
+.global scaleRight
 scaleRight:
 	push {lr}             /* Push lr onto the stack */
 	doWhile_r1_lt_r2:     /* Shift right until just under the remainder */
@@ -65,3 +60,8 @@ divMod:
 	pop {lr}       /* Pop lr from the stack */
     bx lr          /* Leave addSub */
 /* end divMod */
+
+.global printf
+.global time
+.global srand
+.global rand

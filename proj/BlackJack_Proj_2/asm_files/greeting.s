@@ -18,11 +18,11 @@ message3: .asciz "decide if you want another card or stay where you are\n"
 message4: .asciz "Also, note that my job as a dealer is to always hit if my card\nvalue is below 17, if i bust (go over 21) then you automatically win\n\n\n"
     
 .text
-.global _greeting
+.globl _greeting
 
 _greeting:
 /*Output the rules to the user*/
-push {r4,lr}
+push {lr}
 
 ldr R0, address_of_message1
 bl printf
@@ -37,7 +37,7 @@ ldr R0, address_of_message4
 bl printf
 
 /*Link back to the main function*/
-pop {r4,lr}
+pop {lr}
 bx lr 
 
 address_of_message1: .word message1
@@ -46,6 +46,9 @@ address_of_message3: .word message3
 address_of_message4: .word message4
 
 
-/* External */
+/*External Functions*/
 .global printf
 .global scanf
+.global time
+.global srand
+.global rand
