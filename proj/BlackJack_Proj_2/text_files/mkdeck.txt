@@ -14,12 +14,12 @@ _mkdeck:
 	
 	/*Setup a loop counter in r4, keep a running card total in r5*/
 	
-	blt _nCard
-	add r5, r5, #1
 	mov r0,#0                    /* Set time(0) */
     bl time                      /* Call time */
 	bl srand                     /* Call srand */
 	
+	blt _nCard
+	add r5, r5, #1
     loop_rand:                      
 	bl rand                      /* Call rand */
 	mov R1,r0,ASR #1             /* In case random return is negative */
@@ -40,4 +40,11 @@ _mkdeck:
 	
 	
 arr_cards: .word arr
+
+
+.global printf
+.global scanf
+.global time
+.global srand
+.global rand
 	

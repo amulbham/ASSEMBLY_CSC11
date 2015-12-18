@@ -143,7 +143,7 @@ ldr r1,[r1]
 ldr r0, total2
 ldr r0, [r0]
 bl _getcard
-mov r8, r0
+mov r9, r0
 mov r1, r0
 ldr r0, address_of_message 
 bl printf
@@ -160,16 +160,20 @@ bl scanf
 
 ldr R7, address_of_hitorstay
 ldr R7, [R7]
+ldr r0, total
+ldr r0, [r0]
 /*If the user decides to stay, finish the rest of the dealer hand*/
 cmp R7, #1
 BGT _dealerhand
-mov R0, #1 
-ldr r1, pcard_total
-ldr r1, [r1]
+add r6,r6,#1
+add r8,r3,r6,lsl #2
+str r8, [r1]
+ldr r1,[r1]
 bl _getcard
 /*Output the card total, store the card total in r8*/
-add r1, r1, r8
-mov r8, r1
+
+mov r8,r0
+mov r1,r0
 ldr r0, address_of_message   
 bl printf
 
@@ -181,19 +185,21 @@ BGT _plose21
 
 /*The dealer continues their hand, loop until their card total is 17 or higher*/
 _dealerhand:
-mov r5, #8
+
 ldr r0,address_of_finish
 bl printf
+ldr R0, total2 
+ldr r0, [r0]
 _newcard:
-mov R0, r5 
-ldr r1, dcard_total
+add r6,r6,#1
+add r9,r3,r6,lsl #2
+str r9, [r1]
 ldr r1, [r1]
-bl _dcard
-add r1, r1, r9
-mov r9,r1
+bl _getcard
+mov r9,r0
+mov r1,r0
 ldr r0, address_of_message   
 bl printf
-add r5, r5,#4
 cmp r9, #17
 /*If card total is less than 17, loop back for another card*/
 bge _end

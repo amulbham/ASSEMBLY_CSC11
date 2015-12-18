@@ -27,7 +27,6 @@ king: .asciz "King"
 .balign 4
 ace: .asciz "Ace"
 
-
 .text
 
 .global _getcard
@@ -36,22 +35,7 @@ _getcard:
 	/*push the lr and any local variable to the stack*/
     push {r4,r5,r6,r7,r8,lr} 
 	
-	/*Setup a loop counter in r4, keep a running card total in r5*/
-	mov r4, r1
-	
-	mov r0,#0                    /* Set time(0) */
-    bl time                      /* Call time */
-	bl srand                     /* Call srand */
-	
-    loop_rand:                      
-	bl rand                      /* Call rand */
-	mov R1,r0,ASR #1             /* In case random return is negative */
-	mov r2,#52                  
-		                         
-	bl divMod                    /* Call divMod function to get remainder */
-	/*Add two to the random number as a deck of cards starts at 2*/
-	add R1,#2					
-	
+	mov r4,r0
 	/*Based on the value 2-53, the card is assigned a suit*/
 	cmp R1, #14
 	BLE _hearts
@@ -151,7 +135,8 @@ _getcard:
 	
 	_loop:
 	/*store the running total back into r1 for main*/
-	mov r1, r4
+	add r4, r4, r1
+	mov r0,r4
 
 	/*pop back the lr to go back to the main function*/
 
@@ -159,6 +144,7 @@ _getcard:
 	bx lr 
 	
  /*Addresses for each suit and face value card*/
+arr_cards: .word arr
 current_card: .word current
 output_hearts: .word hearts
 output_diamonds: .word diamonds
