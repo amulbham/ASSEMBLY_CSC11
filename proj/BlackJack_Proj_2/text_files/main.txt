@@ -68,7 +68,7 @@ deck: .word 208
 
 main:
 /*store the link register*/
-push{r4,lr}
+push {lr}
 
 /*Output the greeting, and rules if the user does not know how to play*/
 ldr R0,address_of_opening
@@ -111,7 +111,7 @@ bl printf
 
 mov r6, #1
 mov r7,#0
-ldr r0, total
+ldr r0, pcard_total
 ldr r0, [r0]
 _phand:
 mov r1,#0
@@ -140,7 +140,7 @@ add r6,r6,#1
 add r9,r3,r6,lsl #2
 str r9, [r1] 
 ldr r1,[r1]
-ldr r0, total2
+ldr r0, dcard_total
 ldr r0, [r0]
 bl _getcard
 mov r9, r0
@@ -160,7 +160,7 @@ bl scanf
 
 ldr R7, address_of_hitorstay
 ldr R7, [R7]
-ldr r0, total
+ldr r0, pcard_total
 ldr r0, [r0]
 /*If the user decides to stay, finish the rest of the dealer hand*/
 cmp R7, #1
@@ -188,7 +188,7 @@ _dealerhand:
 
 ldr r0,address_of_finish
 bl printf
-ldr R0, total2 
+ldr R0, dcard_total 
 ldr r0, [r0]
 _newcard:
 add r6,r6,#1
@@ -258,7 +258,8 @@ b _exit
 
 _exit:
 /*Pop back the lr and exit the program*/
-pop {r4,lr} 
+
+pop {lr} 
 bx lr
 
 

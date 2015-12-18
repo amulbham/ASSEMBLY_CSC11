@@ -144,7 +144,6 @@ _getcard:
 	bx lr 
 	
  /*Addresses for each suit and face value card*/
-arr_cards: .word arr
 current_card: .word current
 output_hearts: .word hearts
 output_diamonds: .word diamonds

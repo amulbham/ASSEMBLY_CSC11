@@ -10,7 +10,7 @@ _mkdeck:
     push {r4,r5,r6,r7,r8,lr} 
 	
 	mov r5, #0
-	mov r3, arr_cards
+	ldr r3, arr_cards
 	
 	/*Setup a loop counter in r4, keep a running card total in r5*/
 	
