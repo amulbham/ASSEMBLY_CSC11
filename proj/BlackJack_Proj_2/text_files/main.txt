@@ -158,12 +158,111 @@ mov r1, r9
 ldr r0, address_of_message 
 bl printf
 
+/*After dealer first card, the user must decide to hit or stay, keeps looping till
+user hits 21, busts, or decides to stay*/
+_hit:
+ldr r0, address_of_hit
+bl printf
 
+ldr r0, address_of_continue
+ldr r1, address_of_hitorstay
+bl scanf
+
+ldr R7, address_of_hitorstay
+ldr R7, [R7]
+/*If the user decides to stay, finish the rest of the dealer hand*/
+cmp R7, #1
+BGT _dealerhand
+sub r5,#1
+ldr r1,[r6,-r5,lsl #2]
+bl _getcard
+add r8,r8,r0
+
+/*Output the card total, store the card total in r8*/
+mov r1, r8
+ldr r0, address_of_message   
+bl printf
+
+/*Determine if the user has busted or hit 21, else go back to hit or stay*/
+cmp r8, #21
+BEQ _dealerhand
+BLT _hit
+BGT _plose21
+
+/*The dealer continues their hand, loop until their card total is 17 or higher*/
 _dealerhand:
 
+ldr r0,address_of_finish
+bl printf
+
+_newcard:
+sub r5, #1 
+ldr r1,[r6,-r5,lsl #2]
+bl _getcard
+add r9, r9, r0
+
+mov r1, r9
+ldr r0, address_of_message 
+bl printf
+cmp r9, #17
+/*If card total is less than 17, loop back for another card*/
+bge _end
+blt _newcard
 
 
-/*Pop back the lr and exit the program*/
+/*Output the results of the game to the user*/
+_end:
+/*If the dealer has busted, the user automatically wins*/
+cmp r9, #21
+bgt _pwin
+
+/*Else, determine whose card value was higher*/
+cmp r8, r9
+bgt _pwin
+beq _tie
+blt _plose
+
+/*Output for the results of the game, win lose or tie*/
+_plose:
+ldr r0, address_of_lose
+bl printf
+b _playagain
+
+_pwin:
+ldr r0, address_of_win
+bl printf
+b _playagain
+
+_plose21:
+ldr r0, address_of_plose21
+bl printf
+b _playagain
+
+_tie:
+ldr r0, address_of_tie
+bl printf
+b _playagain
+
+/*After determining a winner, let the player decide if they would like to play again*/
+_playagain:
+ldr r0, address_of_playagain
+bl printf
+
+ldr r0, address_of_continue
+ldr r1, pagain
+bl scanf
+
+ldr r4, pagain
+ldr R4, [R4]
+
+cmp r4, #1
+/*Branch to the start of the game loop if yes, else exit the program*/
+beq _start
+b _exit
+
+_exit:
+/*Pop back the lr and exit the program, restore the orginal value of the stack
+by placing the value stored in r6 back into the sp register*/
 mov sp, r6
 pop {r6,lr} 
 bx lr
