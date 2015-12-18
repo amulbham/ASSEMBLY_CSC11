@@ -59,7 +59,8 @@ total: .word 0
 total2: .word 0
 
 .balign 4
-deck: .word 208
+arr: .skip 232
+
 
 .text
 
@@ -81,26 +82,17 @@ ldr R0, address_of_continue
 ldr R1, address_of_continueA
 bl scanf
 
-ldr R6, address_of_continueA
-ldr R6, [R6]
-cmp R6, #2
+ldr r6, address_of_continueA
+ldr r6, [r6]
+
+cmp r6, #2
 BGE _gloop
 bl _greeting
 
 _gloop:
 /*Variables to track the players running card totals, reset after each hand*/
 ldr r8, card_1
-ldr r8, [r8]
-
 ldr r9, card_2
-ldr r9, [r9]
-
-mov r9, #0
-mov r8, #0
-
-
-bl _mkdeck
-
 
 
 _start:	
@@ -108,23 +100,23 @@ _start:
 ldr R0, address_of_firstcards
 bl printf
 
+ldr r3, arr_cards
+bl _mkdeck
 
 mov r6, #1
 mov r7,#0
+ldr r1, card_1
 ldr r0, pcard_total
-ldr r0, [r0]
 _phand:
-mov r1,#0
-add r8,r3,r6,lsl #2
-str r8, [r1] 
-ldr r1, [r1]
+add r10,r3,r6,lsl #2
+str r10, [r1] 
 add r6, r6, #1
 add r7, r7,#1
 bl _getcard
 cmp r7, #2
 blt _phand
 
-mov r8, r0
+str r0, [r8]
 mov r1, r0
 ldr r0, address_of_message 
 bl printf
@@ -284,6 +276,7 @@ address_of_win: .word win
 address_of_tie: .word tie
 address_of_plose21: .word lose21
 address_of_playagain: .word playagain
+arr_cards: .word arr
 
 
 /*External Functions*/
