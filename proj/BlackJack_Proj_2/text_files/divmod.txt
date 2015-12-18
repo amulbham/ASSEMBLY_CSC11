@@ -9,7 +9,7 @@
 .text
 
 /*void scaleRight(int &r1,int &r3,int &r2) */
-.globl scaleRight
+.global scaleRight
 scaleRight:
 	push {lr}             /* Push lr onto the stack */
 	doWhile_r1_lt_r2:     /* Shift right until just under the remainder */
@@ -22,7 +22,7 @@ scaleRight:
 /* end scaleRight */
 
 /* void addSub(int &r3,int &r2,int &r0,int &r1) */
-.globl addSub
+.global addSub
 addSub:
 	push {lr}       /* Push lr onto the stack */
 	doWhile_r3_ge_1:
@@ -36,7 +36,7 @@ addSub:
 /* end addSub */
 
 /* void scaleLeft(int &r1,int &r3,int &r2) */
-.globl scaleLeft
+.global scaleLeft
 scaleLeft:
 	push {lr}             /* Push lr onto the stack */
 	doWhile_r1_ge_r2:     /* Scale left till overshoot with remainder */
@@ -51,9 +51,9 @@ scaleLeft:
 /* end scaleLeft */
 
 /* void divMod(int &r2,int &r0,int &r1) */
-.globl divMod
+.global divMod
 divMod:
-	push {lr}       /* Push lr onto the stack */
+	push {r3,r4,lr}       /* Push lr onto the stack */
 	/* Determine the quotient and remainder */
 	mov r0,#0
 	mov r3,#1
@@ -62,6 +62,6 @@ divMod:
 		bl scaleLeft
 		bl addSub
 	end:
-	pop {lr}       /* Pop lr from the stack */
+	pop {r3,r4,lr}       /* Pop lr from the stack */
     bx lr          /* Leave addSub */
 /* end divMod */
