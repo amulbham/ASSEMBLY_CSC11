@@ -18,7 +18,7 @@ message3: .asciz "decide if you want another card or stay where you are\n"
 message4: .asciz "Also, note that my job as a dealer is to always hit if my card\nvalue is below 17, if i bust (go over 21) then you automatically win\n\n\n"
     
 .text
-.global _greeting
+.globl _greeting
 
 _greeting:
 /*Output the rules to the user*/
