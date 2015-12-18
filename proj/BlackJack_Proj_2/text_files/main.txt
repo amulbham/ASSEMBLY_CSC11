@@ -2,8 +2,12 @@
 Purpose: Develope BlackJack game in ARM assembly language
 		 and throughly implement core concepts learned throughout
 		 the semester 
-Date: 	 12/16/2015
-Main function of Blackjack game*/
+Date: 	 12/17/2015
+Main function of Blackjack game, consists
+of most of the logic in guiding the program, outside
+functions mostly serve the deck. Tried to simplify
+functions to be reusable on dealer and player as their
+were only minor differences in their goals*/
 
 
 /*Below are all the text I had to output to the user 
@@ -92,11 +96,12 @@ _start:
 /*Output the players first two cards*/
 ldr R0, address_of_firstcards
 bl printf
-
-
 	
-	
-	/*Setup a loop counter in r4, keep a running card total in r5*/
+	/*Creation of DECK of cards stored in the STACK. R6 -> sp
+	increment enough room in stack, for 52 cards. Then initilize
+	the cards with values between 2-53 -> reset the card count
+	and increment across R6(which represents the top of the stack,)
+	to access cards, similar to a card draw, card is randomly selected. */
 	mov r4, #0
 	mov r5, #0
 	mov r0,#0                    /* Set time(0) */
@@ -115,17 +120,18 @@ bl printf
 	cmp r4,#20
 	blt _nCard
 	mov r4, #0
+	/*R6 is at top, therefore we increment downwards to access the allocated memory */
 	str r1,[r6,-r5,LSL #2]
 	add r5, #1
 	cmp r5, #52
 	blt _nCard	
 	
-
-
+/*Begin the players hand, set card count to 45, r8 will track players card total*/
 mov r5, #45
 mov r8, #0
 mov r7,#0
 _phand:
+/*Begin 'drawing cards' from the deck by shifting across the random card values stored in the stack  */
 ldr r1,[r6,-r5,lsl #2]
 bl _getcard
 sub r5, #1
@@ -134,7 +140,7 @@ cmp r7, #2
 add r8,r8,r0
 blt _phand
 
-
+/*Display user total after each card draw*/
 mov r1,r8
 ldr r0, address_of_message 
 bl printf
@@ -147,7 +153,7 @@ BEQ _dealerhand
 /*Output the dealers first card*/
 ldr R0, address_of_dfirstcards
 bl printf
-
+/*Dealer running total kept in r9*/
 mov r9, #0
 sub r5,#1
 ldr r1,[r6,-r5,lsl #2]
