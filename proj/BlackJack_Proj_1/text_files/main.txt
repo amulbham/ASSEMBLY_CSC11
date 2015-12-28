@@ -274,6 +274,7 @@ address_of_playagain: .word playagain
 
 
 /*External Functions*/
+.global scanf
 .global printf
 .global time
 .global srand
